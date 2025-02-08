@@ -1,15 +1,19 @@
 import { MessageModel } from "../models/message.model.js";
 import { ObjectId } from "mongodb";
+import { UserModel } from "../models/user.model.js";
 
 export const createMessage = async (req, res) => {
   const { chatId, senderId, text } = req.body;
 
   try {
+    const findUser = await UserModel.findOne({ _id: senderId });
     const message = new MessageModel({ chatId, senderId, text });
     const savedMessage = await message.save();
+
+    console.log(savedMessage);
     return res.status(200).json({
       msg: "Message created successfully",
-      message: savedMessage,
+      message: { ...savedMessage, senderName: findUser.username },
     });
   } catch (err) {
     return res.status(500).json({ error: err });

@@ -26,6 +26,14 @@ export const signup = async (req, res) => {
 
     return res
       .status(201)
+      .cookie("refreshToken", newUser.refreshToken, {
+        httpOnly: true,
+        secure: true,
+      })
+      .cookie("accessToken", newUser.accessToken, {
+        httpOnly: true,
+        secure: true,
+      })
       .json({ message: "User created successfully", user: createdUser });
   } catch (err) {
     return res.status(500).json({ message: err.message });
