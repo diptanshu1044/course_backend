@@ -5,6 +5,7 @@ import { connectDB } from "./utils/connectDb.js";
 import userRouter from "./routes/user.route.js";
 import messageRouter from "./routes/message.route.js";
 import courseRouter from "./routes/course.route.js";
+import dashboardRouter from "./routes/dashboard.route.js";
 
 config();
 
@@ -22,6 +23,7 @@ app.use(cors());
 app.use("/api/user", userRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/course", courseRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
