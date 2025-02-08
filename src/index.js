@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import { connectDB } from "./utils/connectDb.js";
 import userRouter from "./routes/user.route.js";
 import messageRouter from "./routes/message.route.js";
+import courseRouter from "./routes/course.route.js";
 
 config();
 
@@ -20,6 +21,7 @@ app.use(cors());
 // Routes
 app.use("/api/user", userRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/course", courseRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
