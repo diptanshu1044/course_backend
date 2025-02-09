@@ -1,8 +1,12 @@
 import { Router } from "express";
-import { getCoachDashboard } from "../controllers/dashboard.controller.js";
+import {
+  getCoachDashboard,
+  getClientDashboard,
+} from "../controllers/dashboard.controller.js";
 
 const router = Router();
 
 router.get("/coach", getCoachDashboard);
+router.get("/client", getClientDashboard);
 
 export default router;
