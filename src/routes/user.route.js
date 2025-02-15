@@ -4,15 +4,17 @@ import {
   logoutUser,
   signup,
   refreshAccessToken,
+  enrollCourse,
 } from "../controllers/user.controller.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.post("/signup", signup);
 router.post("/login", login);
 
-router.post("/logout", verifyJWT, logoutUser);
+router.post("/logout", logoutUser);
 router.post("/refresh-token", refreshAccessToken);
+
+router.post("/enroll", enrollCourse);
 
 export default router;

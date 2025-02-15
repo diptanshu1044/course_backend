@@ -1,8 +1,10 @@
+import { CourseModel } from "../models/course.model.js";
 import { UserModel } from "../models/user.model.js";
 import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
 
 export const signup = async (req, res) => {
   const { username, email, password, role } = req.body;
+  console.log(req.body);
   try {
     console.log(username, email, password, role);
     const existingUser = await UserModel.findOne({
@@ -146,5 +148,26 @@ export const refreshAccessToken = async (req, res) => {
       });
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized request" });
+  }
+};
+
+export const enrollCourse = async (req, res) => {
+  const { courseId, userId } = req.body;
+  try {
+    console.log(courseId, userId);
+    const selectedCourse = await CourseModel.findById(courseId);
+    console.log(selectedCourse);
+    if (!selectedCourse) {
+      return res.status(401).json({ message: "Invalid course" });
+    }
+    selectedCourse.students.push(userId);
+    selectedCourse.save();
+    console.log(selectedCourse);
+    return res.status(200).json({
+      message: "student successfully enrolled",
+      course: selectedCourse,
+    });
+  } catch (err) {
+    return res.status(400).json({ message: "Something went wrong" });
   }
 };

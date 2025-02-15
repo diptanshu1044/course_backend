@@ -7,6 +7,6 @@ import {
 const router = Router();
 
 router.get("/coach", getCoachDashboard);
-router.get("/client", getClientDashboard);
+router.post("/client", getClientDashboard);
 
 export default router;
