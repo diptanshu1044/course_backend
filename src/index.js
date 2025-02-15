@@ -6,6 +6,7 @@ import userRouter from "./routes/user.route.js";
 import messageRouter from "./routes/message.route.js";
 import courseRouter from "./routes/course.route.js";
 import dashboardRouter from "./routes/dashboard.route.js";
+import chatRouter from "./routes/chat.route.js";
 
 config();
 
@@ -24,6 +25,7 @@ app.use("/api/user", userRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/dashboard", dashboardRouter);
+app.use("/api/chat", chatRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

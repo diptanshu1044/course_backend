@@ -35,7 +35,6 @@ export const getClientDashboard = async (req, res) => {
   const { userId } = req.body;
   try {
     const courses = await CourseModel.find({ students: { $in: [userId] } });
-    console.log(courses);
     const totalCourses = courses.length;
     const totalLessons = courses.reduce(
       (acc, course) =>
@@ -50,7 +49,8 @@ export const getClientDashboard = async (req, res) => {
       (acc, course) => acc + course.sections.length,
       0,
     );
-    console.log(totalLessons, totalModules, totalCourses);
+
+    const coachIds = courses.map((course) => course.coachId);
 
     return res.status(200).json({
       msg: "Client dashboard data fetched successfully",

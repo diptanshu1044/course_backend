@@ -1,12 +1,12 @@
+import { ChatModel } from "../models/chat.model.js";
 import { CourseModel } from "../models/course.model.js";
 import { UserModel } from "../models/user.model.js";
 import { generateAccessAndRefreshToken } from "../utils/generateToken.js";
+import mongoose from "mongoose";
 
 export const signup = async (req, res) => {
   const { username, email, password, role } = req.body;
-  console.log(req.body);
   try {
-    console.log(username, email, password, role);
     const existingUser = await UserModel.findOne({
       $or: [{ username }, { email }],
     });
@@ -66,8 +66,6 @@ export const login = async (req, res) => {
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
       existingUser._id,
     );
-
-    console.log(accessToken, refreshToken);
 
     const loggedInUser = await UserModel.findById(existingUser._id).select(
       "-password -refreshToken",
@@ -154,20 +152,78 @@ export const refreshAccessToken = async (req, res) => {
 export const enrollCourse = async (req, res) => {
   const { courseId, userId } = req.body;
   try {
-    console.log(courseId, userId);
     const selectedCourse = await CourseModel.findById(courseId);
-    console.log(selectedCourse);
     if (!selectedCourse) {
       return res.status(401).json({ message: "Invalid course" });
     }
     selectedCourse.students.push(userId);
     selectedCourse.save();
-    console.log(selectedCourse);
     return res.status(200).json({
       message: "student successfully enrolled",
       course: selectedCourse,
     });
   } catch (err) {
     return res.status(400).json({ message: "Something went wrong" });
+  }
+};
+
+export const getUserCoaches = async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    const courses = await CourseModel.find({ students: { $in: [userId] } });
+    const coachIds = courses.map((course) => course.coachId);
+    const coaches = await UserModel.find({ _id: { $in: coachIds } });
+    return res.status(200).json({
+      message: "Coaches fetched successfully",
+      coaches,
+    });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export const getStudents = async (req, res) => {
+  try {
+    const { coachId } = req.body;
+    if (!coachId) {
+      return res.status(400).json({ message: "Coach ID is required" });
+    }
+
+    const chats = await ChatModel.find({ members: coachId });
+
+    console.log("Chats found:", chats);
+
+    // Extract student IDs, filtering out the coach's ID
+    const studentIds = chats.flatMap((chat) =>
+      chat.members.filter((id) => id.toString() !== coachId.toString()),
+    );
+
+    console.log("Extracted Student IDs:", studentIds);
+
+    // Validate studentIds before querying
+    const validStudentIds = studentIds.filter(mongoose.Types.ObjectId.isValid);
+
+    if (validStudentIds.length === 0) {
+      return res.status(200).json({
+        message: "No students found",
+        students: [],
+      });
+    }
+
+    const students = await UserModel.find({ _id: { $in: validStudentIds } });
+
+    console.log("Students found:", students);
+
+    return res.status(200).json({
+      message: "Students fetched successfully",
+      students,
+    });
+  } catch (err) {
+    console.error("Error fetching students:", err);
+    return res.status(500).json({ message: err.message });
   }
 };

@@ -10,7 +10,6 @@ export const createMessage = async (req, res) => {
     const message = new MessageModel({ chatId, senderId, text });
     const savedMessage = await message.save();
 
-    console.log(savedMessage);
     return res.status(200).json({
       msg: "Message created successfully",
       message: { ...savedMessage, senderName: findUser.username },
@@ -22,7 +21,6 @@ export const createMessage = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   let { chatId } = req.params;
-  chatId = new ObjectId(chatId);
 
   try {
     const messages = await MessageModel.find({ chatId });
