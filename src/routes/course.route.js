@@ -4,11 +4,7 @@ import { createCourse, getCourses } from "../controllers/course.controller.js";
 
 const router = Router();
 
-router.post(
-  "/create",
-  upload.fields([{ name: "thumbnail" }, { name: "videos" }]),
-  createCourse,
-);
+router.post("/create", upload.any(), createCourse);
 
 router.get("/", getCourses);
 

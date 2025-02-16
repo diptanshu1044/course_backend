@@ -2,7 +2,7 @@ import multer from "multer";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Ensure this folder exists
+    cb(null, "./public"); // Ensure this folder exists
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50MB
+  limits: { fileSize: 5000 * 1024 * 1024 }, // Limit file size to 5000MB
 });
 
 export { upload };
