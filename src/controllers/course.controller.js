@@ -92,3 +92,23 @@ export const getCourses = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+export const getSingleCourse = async(req,res) =>{
+  try{
+    const {courseid} = req.params
+    console.log(courseid)
+    console.log(req.params.courseid)
+    if(!courseid){
+      return res.status(400).json({message: "course id not found"})
+    }
+    const course = await CourseModel.findById(courseid);
+    if(!course){
+      return res.status(400).json({message:"Invalid courseid"})
+    }
+    return res.status(200).json({message: "course successfully feteched",course})
+  }
+
+  catch(err){
+    return res.status(500).json({message: err.message})
+  }
+}
