@@ -1,7 +1,7 @@
 import { CourseModel } from "../models/course.model.js";
 
 export const getCoachDashboard = async (req, res) => {
-  const { coachId } = req.body;
+  const { coachId } = req.params;
   try {
     const courses = await CourseModel.find({ coachId });
     const totalCourses = courses.length;
